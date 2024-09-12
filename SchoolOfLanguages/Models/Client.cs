@@ -34,11 +34,12 @@ public partial class Client
     public virtual ICollection<ListTag> ListTags { get; set; } = new List<ListTag>();
 
     public virtual ICollection<VisitList> VisitLists { get; set; } = new List<VisitList>();
-
+    
     public string gender => Gender == 1 ? "Муж." : "Жен.";
+
     public Bitmap? Picture => ClientPhoto != null ? new Bitmap($@"Assets\\{ClientPhoto}") : null;
 
-    //public DateOnly? LastDataVisit => VisitLists.Select(x => x.Data).Order().First();
-
-    //public int? VisitCount => VisitLists.Count(x => x.ClientId);
+    public DateOnly? LastDataVisit => VisitLists.Count > 0 ? VisitLists.Select(x => x.Data).Order().First() : null;
+    
+    public int? VisitCount => VisitLists.Count;
 }

@@ -24,15 +24,45 @@ namespace SchoolOfLanguages
             TwoHundredPage.Click += TwoHundredPage_Click;//200 элементов
             AllPages.Click += AllPages_Click;//Все элементы
 
+            ComboBox1.SelectionChanged += ComboBox1_SelectionChanged;
+
+            allClients = Helper.DataBase.Clients.Include(x => x.VisitLists).OrderBy(z => z.Id).ToList();// загрузка базы в лист
+
             // Обновление данных в листбоксе
             UpdateListBox();
             // Обновление информации по странице
             UpdatePageInfo();
         }
 
+        private void ComboBox1_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            switch (ComboBox1.SelectedIndex)
+            {
+                case 0:
+                    break;
+                case 1:
+                    SortM();
+                    break;
+                case 2:
+                    SortV();
+                    break;
+            }
+        }
+
+        private void SortM()
+        {
+            allClients = Helper.DataBase.Clients.OrderBy(x => x.Gender == 1? 0:1).ToList();
+            UpdateListBox();
+        }
+        private void SortV()
+        {
+            allClients = Helper.DataBase.Clients.OrderByDescending(x => x.VisitLists.Count).ToList();
+            UpdateListBox();
+        }
+
         private void UpdateListBox()
         {
-            allClients = Helper.DataBase.Clients.ToList();
+            // allClients пока что перенес 
             var pagedClients = allClients.Skip(page_Index * Number_of_elements_Page).Take(Number_of_elements_Page).ToList();
             Clients.ItemsSource = pagedClients;
         }// Загрузка/Обновление данных
